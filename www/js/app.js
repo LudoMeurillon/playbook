@@ -20,8 +20,8 @@ angular.module('ionicApp', ['ionic'])
       url: "/play",
       views: {
         'menuContent' :{
-          templateUrl: "check-in.html",
-          controller: "CheckinCtrl"
+          templateUrl: "play.html",
+          controller: "PlayCtrl"
         }
       }
     })
@@ -29,8 +29,8 @@ angular.module('ionicApp', ['ionic'])
       url: "/history",
       views: {
         'menuContent' :{
-          templateUrl: "attendees.html",
-          controller: "AttendeesCtrl"
+          templateUrl: "history.html",
+          controller: "HistoryCtrl"
         }
       }
     })
@@ -58,28 +58,61 @@ angular.module('ionicApp', ['ionic'])
   }
 })
 
-.controller('CheckinCtrl', function($scope) {
+.controller('PlayCtrl', function($scope, $state, $ionicModal) {
   $scope.showForm = true;
-  
-  $scope.shirtSizes = [
-    { text: 'Large', value: 'L' },
-    { text: 'Medium', value: 'M' },
-    { text: 'Small', value: 'S' }
-  ];
-  
-  $scope.attendee = {};
-  $scope.submit = function() {
-    if(!$scope.attendee.firstname) {
-      alert('Info required');
-      return;
-    }
+  $scope.gamers = [];
+  $scope.gamer = {};
+
+  $scope.addGamer = function(){
+    for (var i = 0; i < $scope.gamers.length; i++) {
+      if($scope.gamers[i].name == $scope.gamer.name){
+        return;
+      }
+    };
+    $scope.gamers.push({name: $scope.gamer.name, score:0});
+    $scope.gamer.name = "";
+  }
+
+  $scope.start = function(){
     $scope.showForm = false;
-    $scope.attendees.push($scope.attendee);
-  };
+  }
+
+  $scope.scoring = {}
+
+  $scope.score = function(){
+    $scope.scoring.gamers = [];
+    $scope.scoring.gamer = null;
+    $scope.scoring.gamers = $scope.scoring.gamers.concat($scope.gamers);
+    $scope.nextScore();
+    $scope.modal.show();
+  }
+
+  $scope.nextScore = function(){
+    if($scope.scoring.gamer){
+      console.log("scored");
+      $scope.scoring.gamer.score = $scope.scoring.gamer.score + parseInt($scope.scoring.score);
+      $scope.scoring.gamers.shift();
+    }
+    if($scope.scoring.gamers.length > 0){
+      $scope.scoring.gamer = $scope.scoring.gamers[0];   
+    }else{
+      $scope.modal.hide();
+    }
+  }
+
+  // Load the modal from the given template URL
+  $ionicModal.fromTemplateUrl('score.html', function(modal) {
+    $scope.modal = modal;
+  }, {
+    // Use our scope for the scope of the modal to keep it simple
+    scope: $scope,
+    // The animation we want to use for the modal entrance
+    animation: 'slide-in-up'
+  });
+  
   
 })
-
-.controller('AttendeesCtrl', function($scope) {
+.controller('HistoryCtrl', function($scope) {
   
   $scope.activity = [];
   $scope.arrivedChange = function(attendee) {
