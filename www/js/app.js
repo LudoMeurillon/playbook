@@ -34,7 +34,7 @@ angular.module('ionicApp', ['ionic'])
         }
       }
     })
-  
+
   $urlRouterProvider.otherwise("/book/home");
 })
 
@@ -45,7 +45,7 @@ angular.module('ionicApp', ['ionic'])
       $ionicSideMenuDelegate.toggleLeft($scope.$$childHead);
     }
   }];
-  
+
   $scope.attendees = [
     { firstname: 'Nicolas', lastname: 'Cage' },
     { firstname: 'Jean-Claude', lastname: 'Van Damme' },
@@ -94,7 +94,8 @@ angular.module('ionicApp', ['ionic'])
       $scope.scoring.gamers.shift();
     }
     if($scope.scoring.gamers.length > 0){
-      $scope.scoring.gamer = $scope.scoring.gamers[0];   
+      $scope.scoring.gamer = $scope.scoring.gamers[0];
+      $scope.scoring.gamer.score = null;
     }else{
       $scope.modal.hide();
     }
@@ -109,20 +110,20 @@ angular.module('ionicApp', ['ionic'])
     // The animation we want to use for the modal entrance
     animation: 'slide-in-up'
   });
-  
-  
+
+
 })
 .controller('HistoryCtrl', function($scope) {
-  
+
   $scope.activity = [];
   $scope.arrivedChange = function(attendee) {
     var msg = attendee.firstname + ' ' + attendee.lastname;
-    msg += (!attendee.arrived ? ' has arrived, ' : ' just left, '); 
+    msg += (!attendee.arrived ? ' has arrived, ' : ' just left, ');
     msg += new Date().getMilliseconds();
     $scope.activity.push(msg);
     if($scope.activity.length > 3) {
       $scope.activity.splice(0, 1);
     }
   };
-  
+
 });
